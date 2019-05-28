@@ -13,3 +13,10 @@ make
 ```
 
 If you don't give the program any parameters you will get prompted for the names of each player. Player 1 will always be the white player and Player 2 will always be the black player.
+
+During the game you have a couple commands:
+```
+move [src] [dest] --moves one of your pieces from src to dest
+help [loc]        --gives you a list of possible moves the piece at that location can take
+quit              --exits the game
+```
