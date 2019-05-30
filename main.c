@@ -13,9 +13,6 @@
 #define QUEEN  'Q'
 #define ROOK   'R'
 
-#define NO_TURN_COUNT 0
-#define TURN_COUNT    1
-
 int white_piece_off = 32;
 const char* white_piece_color = "\x1B[97m";
 int black_piece_off = 0;
@@ -26,18 +23,74 @@ const char* other_color = "\x1B[36m";
 const char* reset_color = "\x1B[0m";
 
 char** board = (void*)0;
-char** attack_board = (void*)0; //0 is safe, 1 is white can attack, 2 is black can attack
+
+typedef struct player{
+  char* name;
+  char* color;
+  int off;
+  int* pieces; //length 16 array with the locations of each piece. PPPPPPPPRRNNBBQK
+  int* moves_len; //length 16 array wwith the lengths of each piece's move array (if -1 the moves array needs to be updated)
+  int** moves; //length 16 array with the moves a piece can make
+  int* captured; //length 6 array of the number of pieces PNBRQK
+}Player;
+
+Player* buildPlayer(int white, char* name, char* color, int off)
+{
+  Player* p = (Player*)malloc(sizeof(struct player));
+  memset(p, 0, sizeof(struct player));
+
+  int namelength = strlen(name);
+  p->name = (char*)malloc(sizeof(char) * (namelength + 1));
+  memset(p->name, 0, sizeof(char) * (namelength + 1))
+  memcpy(p->name, name, sizeof(char) * namelength);
+
+  int colorlength = strlen(color);
+  p->color = (char*)malloc(sizeof(char) * (colorlength + 1));
+  memset(p->color, 0, sizeof(char) * (colorlength + 1));
+  memcpy(p->color, color, sizeof(char) * colorlength);
+
+  p->off = off;
+
+  p->pieces = (int*)malloc(sizeof(int) * 16);
+  int i = 0;
+  for(i = 0; i < 8; i++)
+    p->pieces[i] = i + ((white == 0) ? 8 : 48);
+
+  for(i = 0; i < 8; i++)
+  {
+    p->pieces[i + 8] = (i % 2 == 0) ? i : 8 - i;
+    if(white != 0) p->pieces[i + 8] += 56;
+  }
+
+  p->moves_len = (int*)malloc(sizeof(int) * 16);
+  for(i = 0; i < 16; i++) p->moves_len[i] = -1;
+
+  p->moves = (int**)malloc(sizeof(int*) * 16);
+  for(i = 0; i < 16; i++)
+  {
+    //28 is the maximum number of moves a single piece can take
+    p->moves[i] = (int*)malloc(sizeof(int) * 30);
+    memset(p->moves[i], 0, sizeof(int) * 30);
+  }
+
+  p->captured = (int*)malloc(sizeof(int) * 6);
+  memset(p->captured, 0, sizeof(int) * 6);
+
+}
+
+void freePlayer(Player* player)
+{
+
+}
+
 char* location_buffer[64];
 int loc_x = -1;
 int loc_y = -1;
 int loc_index = 0; //index into the location buffer
 
-char white_name[BUFFER_LEN + 1];
-char black_name[BUFFER_LEN + 1];
-
 int num_of_turns = 0;
 
-void clearLocationBuffer()
+void clearLocationBuffer(Player*)
 {
   loc_index = 0;
   loc_x = -1;
