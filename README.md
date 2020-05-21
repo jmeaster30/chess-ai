@@ -20,3 +20,8 @@ move [src] [dest] --moves one of your pieces from src to dest
 help [loc]        --gives you a list of possible moves the piece at that location can take
 quit              --exits the game
 ```
+
+Goals:
+* write a san parser so we can save and record games
+* attempt to make a super basic minimax chess ai
+* experiment with more sophisticated ai's
