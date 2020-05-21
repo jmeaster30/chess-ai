@@ -1,5 +1,5 @@
 # chess-ai
-This is going to be a CLI Chess game that should work in any unix terminal (I have only tested it on Ubuntu).
+This is going to be a CLI Chess game that should work in any unix terminal.
 
 Currently, there is no computer player in this program but I do plan on implementing a computer player in the future.
 
@@ -22,6 +22,7 @@ quit              --exits the game
 ```
 
 Goals:
-* write a san parser so we can save and record games
+* write a san parser so we can save and record games and use san notation to make moves
+* maybe convert to using ncurses for extra fancy terminal graphics
 * attempt to make a super basic minimax chess ai
 * experiment with more sophisticated ai's
